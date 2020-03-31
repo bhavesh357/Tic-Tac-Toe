@@ -3,6 +3,7 @@
 #Variables
 declare -a board[0]=0
 declare -a players
+isWinner=0
 
 function resetBoard() {
 	for((i=1;i<10;i++))
@@ -32,6 +33,24 @@ function showBoard() {
 	done
 }
 
+function checkIfWinner() {
+	winningPlayer=$1
+	checkRows $winningPlayer
+	if [ isWinner -eq 0 ]
+	then 
+		checkColumns $winningPlayer
+	fi
+	if [ isWinner -eq 0 ]
+	then 
+		checkDiag $winningPlayer
+	fi
+}
+
+function check() {
+	playerToCheck=$1
+	checkIfWinner $playerToCheck
+}
+
 function getInput() {
 	player=$1
 	rightInput=0
@@ -45,6 +64,7 @@ function getInput() {
 		fi
 	done
 	board[$input]=$1
+	check $player
 }
 
 echo "Welcome to Tic Tac Toe"
