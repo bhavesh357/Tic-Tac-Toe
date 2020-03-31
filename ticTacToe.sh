@@ -2,6 +2,7 @@
 
 #Constants
 declare -a corner
+declare -a sides
 
 #Variables
 declare -a board[0]=0
@@ -218,6 +219,16 @@ function getNextInput() {
 			nextMove=5
 		fi
 	fi
+	if [ $nextMove -eq 0 ]
+	then
+		for((m=0;m<4;m++))
+		do
+			if [ "${board[${sides[$m]}]}" = "_" ]
+			then
+				nextMove=${sides[$m]}
+			fi
+		done
+	fi
 	board[$nextMove]="O"
 }
 
@@ -227,6 +238,10 @@ corner[0]=1
 corner[1]=3
 corner[2]=7
 corner[3]=9
+sides[0]=2
+sides[1]=4
+sides[2]=6
+sides[3]=8
 echo Your Letter is X
 toss
 for((j=0;j<12;j++))
