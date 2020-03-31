@@ -5,6 +5,7 @@ declare -a board[0]=0
 declare -a players
 isWinner=0
 isTie=0
+nextMove=0
 
 function resetBoard() {
 	for((i=1;i<10;i++))
@@ -114,7 +115,6 @@ function check() {
 }
 
 function getInput() {
-	player=$1
 	rightInput=0
 	while [ $rightInput -eq 0 ]
 	do
@@ -125,7 +125,11 @@ function getInput() {
 			rightInput=1
 		fi
 	done
-	board[$input]=$1
+	board[$input]="X"
+}
+
+function getNextInput() {
+	board[nextMove]="O"
 }
 
 echo "Welcome to Tic Tac Toe"
@@ -139,7 +143,12 @@ do
 		showBoard
 		p=${players[$(($j%2))]}
 		echo $p turn
-		getInput $p
+		if [ "X" = "$p" ]
+		then
+			getInput
+		else
+			getNextInput
+		fi
 		showBoard
 		check $player
 	fi
