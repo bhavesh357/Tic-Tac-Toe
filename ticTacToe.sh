@@ -4,6 +4,7 @@
 declare -a board[0]=0
 declare -a players
 isWinner=0
+isTie=0
 
 function resetBoard() {
 	for((i=1;i<10;i++))
@@ -87,11 +88,28 @@ function checkIfWinner() {
 	fi
 }
 
+function checkIfTie() {
+	isTie=1
+	for((k=1;k<10;k++))
+	do
+		if [ "${board[k]}" = "_" ]
+		then
+			isTie=0
+		fi
+	done
+}
+
 function check() {
 	playerToCheck=$1
 	if [ $isWinner -ne 1 ]
 	then 
 		checkIfWinner $playerToCheck
+	fi
+	if [ $isWinner -ne 1 ]
+	then 
+		checkIfTie
+	else
+		echo player $currentPlayer has won
 	fi
 }
 
@@ -102,7 +120,7 @@ function getInput() {
 	do
 		echo enter the number between 1-9 and empty position
 		read input 
-		if [ ${board[$input]}="_" ]
+		if [ "${board[$input]}" = "_" ]
 		then
 			rightInput=1
 		fi
@@ -116,7 +134,7 @@ echo Your Letter is X
 toss
 for((j=0;j<12;j++))
 do
-	if [ $isWinner -ne 1 ]
+	if [[ $isWinner -ne 1 && $isTie -ne 1 ]]
 	then 
 		showBoard
 		p=${players[$(($j%2))]}
