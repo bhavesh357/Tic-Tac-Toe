@@ -1,4 +1,4 @@
-#!/bin/bash 
+#!/bin/bash -x
 
 #Variables
 declare -a board[0]=0
@@ -39,14 +39,21 @@ function checkRows() {
 	currentPlayer=$1
 	for((i=1;i<10;i+=3))
 	do
-		if [ "${board[$i]}" = "$currentPlayer" ]
+		if [[ "${board[$i]}" = "$currentPlayer" && "${board[$(($i+1))]}" = "$currentPlayer" && "${board[$(($i+2))]}" = "$currentPlayer" ]]
 		then
-			if [ "${board[$(($i+1))]}" = "$currentPlayer" ]
+			isWinner=1
+		else
+			if [[ "${board[$i]}" = "$currentPlayer" && "${board[$(($i+1))]}" = "$currentPlayer" ]]
 			then
-				if [ "${board[$(($i+2))]}" = "$currentPlayer" ]
-				then
-					isWinner=1
-				fi
+				nextMove=$(($i+2))
+			fi
+			if [[ "${board[$i]}" = "$currentPlayer" && "${board[$(($i+2))]}" = "$currentPlayer" ]]
+			then
+				nextMove=$(($i+1))
+			fi
+			if [[ "${board[$(($i+2))]}" = "$currentPlayer" && "${board[$(($i+1))]}" = "$currentPlayer" ]]
+			then
+				nextMove=$i
 			fi
 		fi
 	done
@@ -59,6 +66,19 @@ function checkColumns() {
 		if [[ "${board[$i]}" = "$currentPlayer" && "${board[$(($i+3))]}" = "$currentPlayer" && "${board[$(($i+6))]}" = "$currentPlayer" ]]
 		then
 			isWinner=1
+		else
+			if [[ "${board[$i]}" = "$currentPlayer" && "${board[$(($i+3))]}" = "$currentPlayer" ]]
+			then
+				nextMove=$(($i+6))
+			fi
+			if [[ "${board[$i]}" = "$currentPlayer" && "${board[$(($i+6))]}" = "$currentPlayer" ]]
+			then
+				nextMove=$(($i+3))
+			fi
+			if [[ "${board[$(($i+3))]}" = "$currentPlayer" && "${board[$(($i+6))]}" = "$currentPlayer" ]]
+			then
+				nextMove=$i
+			fi
 		fi
 	done
 }
@@ -72,6 +92,33 @@ function checkDiag() {
 	if [[ "${board[3]}" = "$currentPlayer" && "${board[$((5))]}" = "$currentPlayer" && "${board[$((7))]}" = "$currentPlayer" ]]
 	then
 		isWinner=1
+	fi
+	if [ $isWinner -eq 0 ]
+	then
+		if [[ "${board[1]}" = "$currentPlayer" && "${board[5]}" = "$currentPlayer" ]]
+		then
+			nextMove=9
+		fi
+		if [[ "${board[1]}" = "$currentPlayer" && "${board[9]}" = "$currentPlayer" ]]
+		then
+			nextMove=5
+		fi
+		if [[ "${board[5]}" = "$currentPlayer" && "${board[9]}" = "$currentPlayer" ]]
+		then
+			nextMove=1
+		fi
+		if [[ "${board[3]}" = "$currentPlayer" && "${board[5]}" = "$currentPlayer" ]]
+		then
+			nextMove=7
+		fi
+		if [[ "${board[3]}" = "$currentPlayer" && "${board[7]}" = "$currentPlayer" ]]
+		then
+			nextMove=5
+		fi
+		if [[ "${board[5]}" = "$currentPlayer" && "${board[7]}" = "$currentPlayer" ]]
+		then
+			nextMove=3
+		fi
 	fi
 	
 }
@@ -129,7 +176,17 @@ function getInput() {
 }
 
 function getNextInput() {
-	board[nextMove]="O"
+	nextMove=0
+	checkRows "O"
+	if [ $nextMove -eq 0 ]
+	then
+		checkColumns "O"
+	fi
+	if [ $nextMove -eq 0 ]
+	then
+		checkDiag "O"
+	fi
+	board[$nextMove]="O"
 }
 
 echo "Welcome to Tic Tac Toe"
@@ -150,6 +207,6 @@ do
 			getNextInput
 		fi
 		showBoard
-		check $player
+		check $p
 	fi
 done
