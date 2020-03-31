@@ -186,6 +186,18 @@ function getNextInput() {
 	then
 		checkDiag "O"
 	fi
+	if [ $nextMove -eq 0 ]
+	then
+		checkRows "X"
+	fi
+	if [ $nextMove -eq 0 ]
+	then
+		checkColumns "X"
+	fi
+	if [ $nextMove -eq 0 ]
+	then
+		checkDiag "X"
+	fi
 	board[$nextMove]="O"
 }
 
