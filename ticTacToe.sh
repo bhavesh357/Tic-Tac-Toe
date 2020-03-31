@@ -33,6 +33,38 @@ function showBoard() {
 	done
 }
 
+function checkRows() {
+	for((i=1;i<10;i+=3))
+	do
+		if [[ ${board[$i]} -eq ${board[$(($i+1))]} && ${board[$(($i+2))]} -eq ${board[$(($i+1))]} ]]
+		then
+			isWinner=1
+		fi
+	done
+}
+
+function checkColumns() {
+	for((i=1;i<10;i+=3))
+	do
+		if [[ ${board[$i]} -eq ${board[$(($i+3))]} && ${board[$(($i+6))]} -eq ${board[$(($i+3))]} ]]
+		then
+			isWinner=1
+		fi
+	done
+}
+
+function checkDiag() {
+	if [[ ${board[1]} -eq ${board[$((5))]} && ${board[$((5))]} -eq ${board[$((9))]} ]]
+	then
+		isWinner=1
+	fi
+	if [[ ${board[3]} -eq ${board[$((5))]} && ${board[$((5))]} -eq ${board[$((7))]} ]]
+	then
+		isWinner=1
+	fi
+	
+}
+
 function checkIfWinner() {
 	winningPlayer=$1
 	checkRows $winningPlayer
