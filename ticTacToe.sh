@@ -1,4 +1,4 @@
-#!/bin/bash -x
+#!/bin/bash 
 
 #Variables
 declare -a board[0]=0
@@ -25,7 +25,15 @@ function toss() {
 	fi
 }
 
+function showBoard() {
+	for((i=1;i<10;i+=3))
+	do
+		echo ${board[$i]} ${board[$(($i+1))]} ${board[$(($i+2))]}  $i $(($i+1)) $(($i+2))
+	done
+}
+
 echo "Welcome to Tic Tac Toe"
 resetBoard
 echo Your Letter is X
 toss
+showBoard
