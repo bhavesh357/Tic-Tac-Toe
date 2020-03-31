@@ -1,4 +1,4 @@
-#!/bin/bash -x
+#!/bin/bash 
 
 #Variables
 declare -a board[0]=0
@@ -34,19 +34,27 @@ function showBoard() {
 }
 
 function checkRows() {
+	currentPlayer=$1
 	for((i=1;i<10;i+=3))
 	do
-		if [[ ${board[$i]} -eq ${board[$(($i+1))]} && ${board[$(($i+2))]} -eq ${board[$(($i+1))]} ]]
+		if [ "${board[$i]}" = "$currentPlayer" ]
 		then
-			isWinner=1
+			if [ "${board[$(($i+1))]}" = "$currentPlayer" ]
+			then
+				if [ "${board[$(($i+2))]}" = "$currentPlayer" ]
+				then
+					isWinner=1
+				fi
+			fi
 		fi
 	done
 }
 
 function checkColumns() {
+	currentPlayer=$1
 	for((i=1;i<10;i+=3))
 	do
-		if [[ ${board[$i]} -eq ${board[$(($i+3))]} && ${board[$(($i+6))]} -eq ${board[$(($i+3))]} ]]
+		if [[ "${board[$i]}" = "$currentPlayer" && "${board[$(($i+3))]}" = "$currentPlayer" && "${board[$(($i+6))]}" = "$currentPlayer" ]]
 		then
 			isWinner=1
 		fi
@@ -54,11 +62,12 @@ function checkColumns() {
 }
 
 function checkDiag() {
-	if [[ ${board[1]} -eq ${board[$((5))]} && ${board[$((5))]} -eq ${board[$((9))]} ]]
+	currentPlayer=$1
+	if [[ "${board[1]}" = "$currentPlayer" && "${board[$((5))]}" = "$currentPlayer" && "${board[$((9))]}" = "$currentPlayer" ]]
 	then
 		isWinner=1
 	fi
-	if [[ ${board[3]} -eq ${board[$((5))]} && ${board[$((5))]} -eq ${board[$((7))]} ]]
+	if [[ "${board[3]}" = "$currentPlayer" && "${board[$((5))]}" = "$currentPlayer" && "${board[$((7))]}" = "$currentPlayer" ]]
 	then
 		isWinner=1
 	fi
@@ -68,11 +77,11 @@ function checkDiag() {
 function checkIfWinner() {
 	winningPlayer=$1
 	checkRows $winningPlayer
-	if [ isWinner -eq 0 ]
+	if [ $isWinner -eq 0 ]
 	then 
 		checkColumns $winningPlayer
 	fi
-	if [ isWinner -eq 0 ]
+	if [ $isWinner -eq 0 ]
 	then 
 		checkDiag $winningPlayer
 	fi
@@ -80,7 +89,10 @@ function checkIfWinner() {
 
 function check() {
 	playerToCheck=$1
-	checkIfWinner $playerToCheck
+	if [ $isWinner -ne 1 ]
+	then 
+		checkIfWinner $playerToCheck
+	fi
 }
 
 function getInput() {
@@ -96,17 +108,21 @@ function getInput() {
 		fi
 	done
 	board[$input]=$1
-	check $player
 }
 
 echo "Welcome to Tic Tac Toe"
 resetBoard
 echo Your Letter is X
 toss
-for((j=0;j<2;j++))
+for((j=0;j<12;j++))
 do
-	showBoard
-	p=${players[j]}
-	getInput $p
-	showBoard
+	if [ $isWinner -ne 1 ]
+	then 
+		showBoard
+		p=${players[$(($j%2))]}
+		echo $p turn
+		getInput $p
+		showBoard
+		check $player
+	fi
 done
