@@ -211,6 +211,13 @@ function getNextInput() {
 			fi
 		done
 	fi
+	if [ $nextMove -eq 0 ]
+	then
+		if [ "${board[5]}" = "_" ]
+		then
+			nextMove=5
+		fi
+	fi
 	board[$nextMove]="O"
 }
 
