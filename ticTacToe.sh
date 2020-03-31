@@ -1,4 +1,4 @@
-#!/bin/bash -x
+#!/bin/bash
 
 #Constants
 declare -a corner
@@ -47,15 +47,15 @@ function checkRows() {
 		then
 			isWinner=1
 		else
-			if [[ "${board[$i]}" = "$currentPlayer" && "${board[$(($i+1))]}" = "$currentPlayer" ]]
+			if [[ "${board[$i]}" = "$currentPlayer" && "${board[$(($i+1))]}" = "$currentPlayer" && "${board[$(($i+2))]}" = "_" ]]
 			then
 				nextMove=$(($i+2))
 			fi
-			if [[ "${board[$i]}" = "$currentPlayer" && "${board[$(($i+2))]}" = "$currentPlayer" ]]
+			if [[ "${board[$i]}" = "$currentPlayer" && "${board[$(($i+2))]}" = "$currentPlayer" && "${board[$(($i+2))]}" = "_" ]]
 			then
 				nextMove=$(($i+1))
 			fi
-			if [[ "${board[$(($i+2))]}" = "$currentPlayer" && "${board[$(($i+1))]}" = "$currentPlayer" ]]
+			if [[ "${board[$(($i+2))]}" = "$currentPlayer" && "${board[$(($i+1))]}" = "$currentPlayer" && "${board[$i]}" = "_" ]]
 			then
 				nextMove=$i
 			fi
@@ -65,21 +65,21 @@ function checkRows() {
 
 function checkColumns() {
 	currentPlayer=$1
-	for((i=1;i<10;i+=3))
+	for((i=1;i<10;i++))
 	do
 		if [[ "${board[$i]}" = "$currentPlayer" && "${board[$(($i+3))]}" = "$currentPlayer" && "${board[$(($i+6))]}" = "$currentPlayer" ]]
 		then
 			isWinner=1
 		else
-			if [[ "${board[$i]}" = "$currentPlayer" && "${board[$(($i+3))]}" = "$currentPlayer" ]]
+			if [[ "${board[$i]}" = "$currentPlayer" && "${board[$(($i+3))]}" = "$currentPlayer" && "${board[$(($i+6))]}" = "_" ]]
 			then
 				nextMove=$(($i+6))
 			fi
-			if [[ "${board[$i]}" = "$currentPlayer" && "${board[$(($i+6))]}" = "$currentPlayer" ]]
+			if [[ "${board[$i]}" = "$currentPlayer" && "${board[$(($i+6))]}" = "$currentPlayer" && "${board[$(($i+3))]}" = "_" ]]
 			then
 				nextMove=$(($i+3))
 			fi
-			if [[ "${board[$(($i+3))]}" = "$currentPlayer" && "${board[$(($i+6))]}" = "$currentPlayer" ]]
+			if [[ "${board[$(($i+3))]}" = "$currentPlayer" && "${board[$(($i+6))]}" = "$currentPlayer" && "${board[$i]}" = "_" ]]
 			then
 				nextMove=$i
 			fi
@@ -99,27 +99,27 @@ function checkDiag() {
 	fi
 	if [ $isWinner -eq 0 ]
 	then
-		if [[ "${board[1]}" = "$currentPlayer" && "${board[5]}" = "$currentPlayer" ]]
+		if [[ "${board[1]}" = "$currentPlayer" && "${board[5]}" = "$currentPlayer" && "${board[9]}" = "_" ]]
 		then
 			nextMove=9
 		fi
-		if [[ "${board[1]}" = "$currentPlayer" && "${board[9]}" = "$currentPlayer" ]]
+		if [[ "${board[1]}" = "$currentPlayer" && "${board[9]}" = "$currentPlayer" && "${board[5]}" = "_" ]]
 		then
 			nextMove=5
 		fi
-		if [[ "${board[5]}" = "$currentPlayer" && "${board[9]}" = "$currentPlayer" ]]
+		if [[ "${board[5]}" = "$currentPlayer" && "${board[9]}" = "$currentPlayer" && "${board[1]}" = "_" ]]
 		then
 			nextMove=1
 		fi
-		if [[ "${board[3]}" = "$currentPlayer" && "${board[5]}" = "$currentPlayer" ]]
+		if [[ "${board[3]}" = "$currentPlayer" && "${board[5]}" = "$currentPlayer" && "${board[7]}" = "_" ]]
 		then
 			nextMove=7
 		fi
-		if [[ "${board[3]}" = "$currentPlayer" && "${board[7]}" = "$currentPlayer" ]]
+		if [[ "${board[3]}" = "$currentPlayer" && "${board[7]}" = "$currentPlayer" && "${board[5]}" = "_" ]]
 		then
 			nextMove=5
 		fi
-		if [[ "${board[5]}" = "$currentPlayer" && "${board[7]}" = "$currentPlayer" ]]
+		if [[ "${board[5]}" = "$currentPlayer" && "${board[7]}" = "$currentPlayer" && "${board[3]}" = "_" ]]
 		then
 			nextMove=3
 		fi
@@ -162,6 +162,7 @@ function check() {
 		checkIfTie
 	else
 		echo player $currentPlayer has won
+		showBoard
 	fi
 }
 
@@ -244,20 +245,22 @@ sides[2]=6
 sides[3]=8
 echo Your Letter is X
 toss
-for((j=0;j<12;j++))
+while [[ $isWinner -ne 1 && $isTie -ne 1 ]]
 do
-	if [[ $isWinner -ne 1 && $isTie -ne 1 ]]
-	then 
-		showBoard
-		p=${players[$(($j%2))]}
-		echo $p turn
-		if [ "X" = "$p" ]
+	for((j=0;j<2;j++))
+	do
+		if [[ $isWinner -ne 1 && $isTie -ne 1 ]]
 		then
-			getInput
-		else
-			getNextInput
+			showBoard
+			p=${players[$(($j%2))]}
+			echo $p turn
+			if [ "X" = "$p" ]
+			then
+				getInput
+			else
+				getNextInput
+			fi
+			check $p
 		fi
-		showBoard
-		check $p
-	fi
+	done
 done
