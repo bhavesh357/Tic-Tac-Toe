@@ -1,4 +1,4 @@
-#!/bin/bash 
+#!/bin/bash -x
 
 #Variables
 declare -a board[0]=0
@@ -32,8 +32,29 @@ function showBoard() {
 	done
 }
 
+function getInput() {
+	player=$1
+	rightInput=0
+	while [ $rightInput -eq 0 ]
+	do
+		echo enter the number between 1-9 and empty position
+		read input 
+		if [ ${board[$input]}="_" ]
+		then
+			rightInput=1
+		fi
+	done
+	board[$input]=$1
+}
+
 echo "Welcome to Tic Tac Toe"
 resetBoard
 echo Your Letter is X
 toss
-showBoard
+for((j=0;j<2;j++))
+do
+	showBoard
+	p=${players[j]}
+	getInput $p
+	showBoard
+done
