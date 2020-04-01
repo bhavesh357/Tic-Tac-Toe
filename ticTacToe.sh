@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/bash 
 
 #Constants
 declare -a corner
@@ -10,6 +10,9 @@ declare -a players
 isWinner=0
 isTie=0
 nextMove=0
+declare computerSign
+declare playerSign
+
 
 function resetBoard() {
 	for((i=1;i<10;i++))
@@ -19,23 +22,23 @@ function resetBoard() {
 }
 
 function toss() {
-	t=$(($RANDOM%2))
-	if [ $t -eq 0 ]
+	tossResult=$(($RANDOM%2))
+	if [ $tossResult -eq 0 ]
 	then 
 		echo "You will play first"
-		players[0]="X"
-		players[1]="O"
+		players[0]=$playerSign
+		players[1]=$computerSign
 	else
 		echo "You will play second"
-		players[0]="O"
-		players[1]="X"
+		players[0]=$computerSign
+		players[1]=$playerSign
 	fi
 }
 
 function showBoard() {
 	for((i=1;i<10;i+=3))
 	do
-		echo ${board[$i]} ${board[$(($i+1))]} ${board[$(($i+2))]}  $i $(($i+1)) $(($i+2))
+		echo ${board[$i]} ${board[$(($i+1))]} ${board[$(($i+2))]}
 	done
 }
 
@@ -149,6 +152,11 @@ function checkIfTie() {
 			isTie=0
 		fi
 	done
+	if [ $isTie -eq 1 ]
+	then
+		showBoard
+		echo it was a tie
+	fi
 }
 
 function check() {
@@ -175,33 +183,40 @@ function getInput() {
 		if [ "${board[$input]}" = "_" ]
 		then
 			rightInput=1
+		else 
+			if [[ "${board[$input]}" = "X" || "${board[$input]}" = "O" ]]
+			then
+				echo "that place is already taken. Try other place"
+			else
+				echo "Enter valid input"
+			fi
 		fi
 	done
-	board[$input]="X"
+	board[$input]=$playerSign
 }
 
 function getNextInput() {
 	nextMove=0
-	checkRows "O"
+	checkRows $computerSign
 	if [ $nextMove -eq 0 ]
 	then
-		checkColumns "O"
+		checkColumns $computerSign
 	fi
 	if [ $nextMove -eq 0 ]
 	then
-		checkDiag "O"
+		checkDiag $computerSign
 	fi
 	if [ $nextMove -eq 0 ]
 	then
-		checkRows "X"
+		checkRows $playerSign
 	fi
 	if [ $nextMove -eq 0 ]
 	then
-		checkColumns "X"
+		checkColumns $playerSign
 	fi
 	if [ $nextMove -eq 0 ]
 	then
-		checkDiag "X"
+		checkDiag $playerSign
 	fi
 	if [ $nextMove -eq 0 ]
 	then
@@ -230,7 +245,20 @@ function getNextInput() {
 			fi
 		done
 	fi
-	board[$nextMove]="O"
+	board[$nextMove]=$computerSign
+}
+
+function assignSign() {
+	if [ $(($RANDOM%2)) -eq 0 ]
+	then
+		computerSign="X"
+		playerSign="O"
+	else
+		computerSign="O"
+		playerSign="X"
+	fi
+	echo player your sign is $playerSign
+	echo computer sign is $computerSign
 }
 
 echo "Welcome to Tic Tac Toe"
@@ -243,7 +271,7 @@ sides[0]=2
 sides[1]=4
 sides[2]=6
 sides[3]=8
-echo Your Letter is X
+assignSign
 toss
 while [[ $isWinner -ne 1 && $isTie -ne 1 ]]
 do
@@ -252,9 +280,9 @@ do
 		if [[ $isWinner -ne 1 && $isTie -ne 1 ]]
 		then
 			showBoard
-			p=${players[$(($j%2))]}
+			p=${players[$j]}
 			echo $p turn
-			if [ "X" = "$p" ]
+			if [ $playerSign = "$p" ]
 			then
 				getInput
 			else
