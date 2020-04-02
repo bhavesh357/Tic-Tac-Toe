@@ -3,6 +3,7 @@
 #Constants
 declare -a corner
 declare -a sides
+BOARD_SIZE=9
 
 #Variables
 declare -a board[0]=0
@@ -15,7 +16,7 @@ declare playerSign
 
 
 function resetBoard() {
-	for((i=1;i<10;i++))
+	for((i=1;i<=$BOARD_SIZE;i++))
 	do
 		board[i]="_"
 	done
@@ -36,7 +37,7 @@ function toss() {
 }
 
 function showBoard() {
-	for((i=1;i<10;i+=3))
+	for((i=1;i<=$BOARD_SIZE;i+=3))
 	do
 		echo ${board[$i]} ${board[$(($i+1))]} ${board[$(($i+2))]}
 	done
@@ -44,7 +45,7 @@ function showBoard() {
 
 function checkRows() {
 	currentPlayer=$1
-	for((i=1;i<10;i+=3))
+	for((i=1;i<=$BOARD_SIZE;i+=3))
 	do
 		if [[ "${board[$i]}" = "$currentPlayer" && "${board[$(($i+1))]}" = "$currentPlayer" && "${board[$(($i+2))]}" = "$currentPlayer" ]]
 		then
@@ -68,7 +69,7 @@ function checkRows() {
 
 function checkColumns() {
 	currentPlayer=$1
-	for((i=1;i<10;i++))
+	for((i=1;i<=$BOARD_SIZE;i++))
 	do
 		if [[ "${board[$i]}" = "$currentPlayer" && "${board[$(($i+3))]}" = "$currentPlayer" && "${board[$(($i+6))]}" = "$currentPlayer" ]]
 		then
@@ -145,7 +146,7 @@ function checkIfWinner() {
 
 function checkIfTie() {
 	isTie=1
-	for((k=1;k<10;k++))
+	for((k=1;k<=$BOARD_SIZE;k++))
 	do
 		if [ "${board[k]}" = "_" ]
 		then
@@ -261,16 +262,20 @@ function assignSign() {
 	echo computer sign is $computerSign
 }
 
+function setCornersAndSides() {
+	corner[0]=1
+	corner[1]=3
+	corner[2]=7
+	corner[3]=9
+	sides[0]=2
+	sides[1]=4
+	sides[2]=6
+	sides[3]=8
+}
+
 echo "Welcome to Tic Tac Toe"
 resetBoard
-corner[0]=1
-corner[1]=3
-corner[2]=7
-corner[3]=9
-sides[0]=2
-sides[1]=4
-sides[2]=6
-sides[3]=8
+setCornersAndSides
 assignSign
 toss
 while [[ $isWinner -ne 1 && $isTie -ne 1 ]]
