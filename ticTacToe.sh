@@ -27,7 +27,7 @@ function resetBoard() {
 function toss() {
 	tossResult=$(($RANDOM%2))
 	if [ $tossResult -eq 0 ]
-	then 
+	then
 		echo "You will play first"
 		players[0]=$playerSign
 		players[1]=$computerSign
@@ -72,7 +72,6 @@ function checkRowsAndColumns() {
 		fi
 		c=$(($c+$incrementBy))
 	done
-
 }
 
 function checkDiag() {
@@ -112,18 +111,17 @@ function checkDiag() {
 			nextMove=3
 		fi
 	fi
-	
 }
 
 function checkIfWinner() {
 	winningPlayer=$1
 	checkRowsAndColumns $winningPlayer 3 1
 	if [ $isWinner -eq 0 ]
-	then 
+	then
 		checkRowsAndColumns $winningPlayer 1 3
 	fi
 	if [ $isWinner -eq 0 ]
-	then 
+	then
 		checkDiag $winningPlayer
 	fi
 }
@@ -147,11 +145,11 @@ function checkIfTie() {
 function check() {
 	playerToCheck=$1
 	if [ $isWinner -ne 1 ]
-	then 
+	then
 		checkIfWinner $playerToCheck
 	fi
 	if [ $isWinner -ne 1 ]
-	then 
+	then
 		checkIfTie
 	else
 		echo player $currentPlayer has won
@@ -164,11 +162,11 @@ function getInput() {
 	while [ $rightInput -eq 0 ]
 	do
 		echo enter the number between 1-9 and empty position
-		read input 
+		read input
 		if [ "${board[$input]}" = "_" ]
 		then
 			rightInput=1
-		else 
+		else
 			if [[ "${board[$input]}" = "X" || "${board[$input]}" = "O" ]]
 			then
 				echo "that place is already taken. Try other place"
@@ -201,7 +199,7 @@ function checkCornersAndSides() {
 	if [ $nextMove -eq 0 ]
 	then
 		for((l=0;l<$SIZE_OF_SIDES_AND_CORNERS;l++))
-		do  
+		do
 			if [ $isCorner -eq 1 ]
 			then
 				if [ "${board[${corner[$l]}]}" = "_" ]
@@ -289,7 +287,7 @@ function main() {
 	setCornersAndSides
 	assignSign
 	toss
-	startPlaying	
+	startPlaying
 }
 
 main
