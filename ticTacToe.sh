@@ -2,6 +2,8 @@
 
 #Constants
 BOARD_SIZE=9
+NUMBER_OF_PLAYERS=2
+SIZE_OF_SIDES_AND_CORNERS=4
 
 #Variables
 declare -a corner
@@ -198,7 +200,7 @@ function checkCornersAndSides() {
 	isCorner=$1
 	if [ $nextMove -eq 0 ]
 	then
-		for((l=0;l<4;l++))
+		for((l=0;l<$SIZE_OF_SIDES_AND_CORNERS;l++))
 		do  
 			if [ $isCorner -eq 1 ]
 			then
@@ -237,7 +239,7 @@ function getNextInput() {
 }
 
 function assignSign() {
-	if [ $(($RANDOM%2)) -eq 0 ]
+	if [ $(($RANDOM%$NUMBER_OF_PLAYERS)) -eq 0 ]
 	then
 		computerSign="X"
 		playerSign="O"
@@ -263,7 +265,7 @@ function setCornersAndSides() {
 function startPlaying() {
 	while [[ $isWinner -ne 1 && $isTie -ne 1 ]]
 	do
-		for((j=0;j<2;j++))
+		for((j=0;j<$NUMBER_OF_PLAYERS;j++))
 		do
 			if [[ $isWinner -ne 1 && $isTie -ne 1 ]]
 			then
