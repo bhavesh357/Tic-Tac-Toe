@@ -1,11 +1,11 @@
 #!/bin/bash
 
 #Constants
-declare -a corner
-declare -a sides
 BOARD_SIZE=9
 
 #Variables
+declare -a corner
+declare -a sides
 declare -a board[0]=0
 declare -a players
 isWinner=0
