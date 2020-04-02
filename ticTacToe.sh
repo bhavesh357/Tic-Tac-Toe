@@ -1,4 +1,4 @@
-#!/bin/bash 
+#!/bin/bash
 
 #Constants
 declare -a corner
@@ -43,52 +43,34 @@ function showBoard() {
 	done
 }
 
-function checkRows() {
+function checkRowsAndColumns() {
 	currentPlayer=$1
-	for((i=1;i<=$BOARD_SIZE;i+=3))
+	incrementBy=$2
+	nextBoard=$3
+	nextToNextBoard=$(($nextBoard*2))
+	c=1
+	while [ $c -le $BOARD_SIZE ]
 	do
-		if [[ "${board[$i]}" = "$currentPlayer" && "${board[$(($i+1))]}" = "$currentPlayer" && "${board[$(($i+2))]}" = "$currentPlayer" ]]
+		if [[ "${board[$c]}" = "$currentPlayer" && "${board[$(($c+$nextBoard))]}" = "$currentPlayer" && "${board[$(($c+$nextToNextBoard))]}" = "$currentPlayer" ]]
 		then
 			isWinner=1
 		else
-			if [[ "${board[$i]}" = "$currentPlayer" && "${board[$(($i+1))]}" = "$currentPlayer" && "${board[$(($i+2))]}" = "_" ]]
+			if [[ "${board[$c]}" = "$currentPlayer" && "${board[$(($c+$nextBoard))]}" = "$currentPlayer" && "${board[$(($c+$nextToNextBoard))]}" = "_" ]]
 			then
-				nextMove=$(($i+2))
+				nextMove=$(($c+$nextToNextBoard))
 			fi
-			if [[ "${board[$i]}" = "$currentPlayer" && "${board[$(($i+2))]}" = "$currentPlayer" && "${board[$(($i+1))]}" = "_" ]]
+			if [[ "${board[$c]}" = "$currentPlayer" && "${board[$(($c+$nextToNextBoard))]}" = "$currentPlayer" && "${board[$(($c+$nextBoard))]}" = "_" ]]
 			then
-				nextMove=$(($i+1))
+				nextMove=$(($c+$nextBoard))
 			fi
-			if [[ "${board[$(($i+2))]}" = "$currentPlayer" && "${board[$(($i+1))]}" = "$currentPlayer" && "${board[$i]}" = "_" ]]
+			if [[ "${board[$(($c+$nextBoard))]}" = "$currentPlayer" && "${board[$(($c+$nextToNextBoard))]}" = "$currentPlayer" && "${board[$c]}" = "_" ]]
 			then
-				nextMove=$i
+				nextMove=$c
 			fi
 		fi
+		c=$(($c+$incrementBy))
 	done
-}
 
-function checkColumns() {
-	currentPlayer=$1
-	for((i=1;i<=$BOARD_SIZE;i++))
-	do
-		if [[ "${board[$i]}" = "$currentPlayer" && "${board[$(($i+3))]}" = "$currentPlayer" && "${board[$(($i+6))]}" = "$currentPlayer" ]]
-		then
-			isWinner=1
-		else
-			if [[ "${board[$i]}" = "$currentPlayer" && "${board[$(($i+3))]}" = "$currentPlayer" && "${board[$(($i+6))]}" = "_" ]]
-			then
-				nextMove=$(($i+6))
-			fi
-			if [[ "${board[$i]}" = "$currentPlayer" && "${board[$(($i+6))]}" = "$currentPlayer" && "${board[$(($i+3))]}" = "_" ]]
-			then
-				nextMove=$(($i+3))
-			fi
-			if [[ "${board[$(($i+3))]}" = "$currentPlayer" && "${board[$(($i+6))]}" = "$currentPlayer" && "${board[$i]}" = "_" ]]
-			then
-				nextMove=$i
-			fi
-		fi
-	done
 }
 
 function checkDiag() {
@@ -133,10 +115,10 @@ function checkDiag() {
 
 function checkIfWinner() {
 	winningPlayer=$1
-	checkRows $winningPlayer
+	checkRowsAndColumns $winningPlayer 3 1
 	if [ $isWinner -eq 0 ]
 	then 
-		checkColumns $winningPlayer
+		checkRowsAndColumns $winningPlayer 1 3
 	fi
 	if [ $isWinner -eq 0 ]
 	then 
@@ -200,11 +182,11 @@ function checkForPlayer() {
 	playerToCheckFor=$1
 	if [ $nextMove -eq 0 ]
 	then
-		checkRows $playerToCheckFor
+		checkRowsAndColumns $playerToCheckFor 3 1
 	fi
 	if [ $nextMove -eq 0 ]
 	then
-		checkColumns $playerToCheckFor
+		checkRowsAndColumns $playerToCheckFor 1 3
 	fi
 	if [ $nextMove -eq 0 ]
 	then
