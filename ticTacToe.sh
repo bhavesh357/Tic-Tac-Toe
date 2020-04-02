@@ -54,7 +54,7 @@ function checkRows() {
 			then
 				nextMove=$(($i+2))
 			fi
-			if [[ "${board[$i]}" = "$currentPlayer" && "${board[$(($i+2))]}" = "$currentPlayer" && "${board[$(($i+2))]}" = "_" ]]
+			if [[ "${board[$i]}" = "$currentPlayer" && "${board[$(($i+2))]}" = "$currentPlayer" && "${board[$(($i+1))]}" = "_" ]]
 			then
 				nextMove=$(($i+1))
 			fi
