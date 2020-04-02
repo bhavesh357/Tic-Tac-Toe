@@ -260,27 +260,34 @@ function setCornersAndSides() {
 	sides[3]=8
 }
 
-echo "Welcome to Tic Tac Toe"
-resetBoard
-setCornersAndSides
-assignSign
-toss
-while [[ $isWinner -ne 1 && $isTie -ne 1 ]]
-do
-	for((j=0;j<2;j++))
+function startPlaying() {
+	while [[ $isWinner -ne 1 && $isTie -ne 1 ]]
 	do
-		if [[ $isWinner -ne 1 && $isTie -ne 1 ]]
-		then
-			showBoard
-			p=${players[$j]}
-			echo $p turn
-			if [ $playerSign = "$p" ]
+		for((j=0;j<2;j++))
+		do
+			if [[ $isWinner -ne 1 && $isTie -ne 1 ]]
 			then
-				getInput
-			else
-				getNextInput
+				showBoard
+				p=${players[$j]}
+				echo $p turn
+				if [ $playerSign = "$p" ]
+				then
+					getInput
+				else
+					getNextInput
+				fi
+				check $p
 			fi
-			check $p
-		fi
+		done
 	done
-done
+}
+function main() {
+	echo "Welcome to Tic Tac Toe"
+	resetBoard
+	setCornersAndSides
+	assignSign
+	toss
+	startPlaying	
+}
+
+main
