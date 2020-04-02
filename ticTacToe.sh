@@ -196,39 +196,45 @@ function getInput() {
 	board[$input]=$playerSign
 }
 
-function getNextInput() {
-	nextMove=0
-	checkRows $computerSign
+function checkForPlayer() {
+	playerToCheckFor=$1
 	if [ $nextMove -eq 0 ]
 	then
-		checkColumns $computerSign
+		checkRows $playerToCheckFor
 	fi
 	if [ $nextMove -eq 0 ]
 	then
-		checkDiag $computerSign
+		checkColumns $playerToCheckFor
 	fi
 	if [ $nextMove -eq 0 ]
 	then
-		checkRows $playerSign
+		checkDiag $playerToCheckFor
 	fi
-	if [ $nextMove -eq 0 ]
-	then
-		checkColumns $playerSign
-	fi
-	if [ $nextMove -eq 0 ]
-	then
-		checkDiag $playerSign
-	fi
+}
+
+function checkCornersAndSides() {
+	isCorner=$1
 	if [ $nextMove -eq 0 ]
 	then
 		for((l=0;l<4;l++))
-		do
-			if [ "${board[${corner[$l]}]}" = "_" ]
+		do  
+			if [ $isCorner -eq 1 ]
 			then
-				nextMove=${corner[$l]}
+				if [ "${board[${corner[$l]}]}" = "_" ]
+				then
+					nextMove=${corner[$l]}
+				fi
+			else
+				if [ "${board[${sides[$m]}]}" = "_" ]
+				then
+					nextMove=${sides[$m]}
+				fi
 			fi
 		done
 	fi
+}
+
+function checkCenter() {
 	if [ $nextMove -eq 0 ]
 	then
 		if [ "${board[5]}" = "_" ]
@@ -236,16 +242,15 @@ function getNextInput() {
 			nextMove=5
 		fi
 	fi
-	if [ $nextMove -eq 0 ]
-	then
-		for((m=0;m<4;m++))
-		do
-			if [ "${board[${sides[$m]}]}" = "_" ]
-			then
-				nextMove=${sides[$m]}
-			fi
-		done
-	fi
+}
+
+function getNextInput() {
+	nextMove=0
+	checkForPlayer $computerSign
+	checkForPlayer $playerSign
+	checkCornersAndSides 1
+	checkCenter
+	checkCornersAndSides 0
 	board[$nextMove]=$computerSign
 }
 
