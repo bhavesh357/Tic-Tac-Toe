@@ -24,8 +24,12 @@ function resetBoard() {
 	done
 }
 
+function getRandom() {
+	echo $(($RANDOM%2))
+}
+
 function toss() {
-	tossResult=$(($RANDOM%2))
+	tossResult=$( getRandom )
 	if [ $tossResult -eq 0 ]
 	then
 		echo "You will play first"
@@ -237,7 +241,7 @@ function getNextInput() {
 }
 
 function assignSign() {
-	if [ $(($RANDOM%$NUMBER_OF_PLAYERS)) -eq 0 ]
+	if [ $( getRandom ) -eq 0 ]
 	then
 		computerSign="X"
 		playerSign="O"
