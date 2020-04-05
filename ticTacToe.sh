@@ -211,9 +211,9 @@ function checkCornersAndSides() {
 					nextMove=${corner[$l]}
 				fi
 			else
-				if [ "${board[${sides[$m]}]}" = "_" ]
+				if [ "${board[${sides[$l]}]}" = "_" ]
 				then
-					nextMove=${sides[$m]}
+					nextMove=${sides[$l]}
 				fi
 			fi
 		done
