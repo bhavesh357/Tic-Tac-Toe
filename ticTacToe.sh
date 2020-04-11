@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/bash 
 
 #Constants
 BOARD_SIZE=9
@@ -80,41 +80,41 @@ function checkRowsAndColumns() {
 
 function checkDiag() {
 	currentPlayer=$1
-	if [[ "${board[1]}" = "$currentPlayer" && "${board[$((5))]}" = "$currentPlayer" && "${board[$((9))]}" = "$currentPlayer" ]]
-	then
-		isWinner=1
-	fi
-	if [[ "${board[3]}" = "$currentPlayer" && "${board[$((5))]}" = "$currentPlayer" && "${board[$((7))]}" = "$currentPlayer" ]]
-	then
-		isWinner=1
-	fi
-	if [ $isWinner -eq 0 ]
-	then
-		if [[ "${board[1]}" = "$currentPlayer" && "${board[5]}" = "$currentPlayer" && "${board[9]}" = "_" ]]
-		then
-			nextMove=9
-		fi
-		if [[ "${board[1]}" = "$currentPlayer" && "${board[9]}" = "$currentPlayer" && "${board[5]}" = "_" ]]
-		then
-			nextMove=5
-		fi
-		if [[ "${board[5]}" = "$currentPlayer" && "${board[9]}" = "$currentPlayer" && "${board[1]}" = "_" ]]
-		then
-			nextMove=1
-		fi
-		if [[ "${board[3]}" = "$currentPlayer" && "${board[5]}" = "$currentPlayer" && "${board[7]}" = "_" ]]
-		then
-			nextMove=7
-		fi
-		if [[ "${board[3]}" = "$currentPlayer" && "${board[7]}" = "$currentPlayer" && "${board[5]}" = "_" ]]
-		then
-			nextMove=5
-		fi
-		if [[ "${board[5]}" = "$currentPlayer" && "${board[7]}" = "$currentPlayer" && "${board[3]}" = "_" ]]
-		then
-			nextMove=3
-		fi
-	fi
+	for(( crossFlag=1;crossFlag<3;crossFlag++ ))
+	do
+		for(( f=1;f<4;f+=2 ))
+		do
+			if [[ $f -eq 1 ]]
+			then
+				e=4
+			else
+				e=2
+			fi
+			if [[ $crossFlag -eq 1 ]]
+			then
+				if [[ "${board[$f]}" = "$currentPlayer" && "${board[$(($f+$e))]}" = "$currentPlayer" && "${board[$(($f+$e+$e))]}" = "$currentPlayer" ]]
+				then
+					isWinner=1
+				fi
+			else
+				if [[ $isWinner -eq 0 ]]
+				then
+					if [[ "${board[$(($f+$e))]}" = "$currentPlayer" && "${board[$(($f+$e+$e))]}" = "$currentPlayer" && "${board[$f]}" = "_" ]]
+					then
+						nextMove=$f
+					fi
+					if [[ "${board[$h]}" = "$currentPlayer" && "${board[$(($f+$e))]}" = "$currentPlayer" && "${board[$(($f+$e+$e))]}" = "_" ]]
+					then
+						nextMove=$(($f+$e+$e))
+					fi
+					if [[ "${board[$f]}" = "$currentPlayer" && "${board[$(($f+$t+$e))]}" = "$currentPlayer" && "${board[$(($f+$e))]}" = "_" ]]
+					then
+						nextMove=$(($f+$e))
+					fi
+				fi
+			fi
+		done
+	done
 }
 
 function checkIfWinner() {
