@@ -265,24 +265,20 @@ function setCornersAndSides() {
 }
 
 function startPlaying() {
+	j=0
 	while [[ $isWinner -ne 1 && $isTie -ne 1 ]]
 	do
-		for((j=0;j<$NUMBER_OF_PLAYERS;j++))
-		do
-			if [[ $isWinner -ne 1 && $isTie -ne 1 ]]
-			then
-				showBoard
-				p=${players[$j]}
-				echo $p turn
-				if [ $playerSign = "$p" ]
-				then
-					getInput
-				else
-					getNextInput
-				fi
-				check $p
-			fi
-		done
+		showBoard
+		p=${players[$(($j%2))]}
+		echo $p turn
+		if [ $playerSign = "$p" ]
+		then
+			getInput
+		else
+			getNextInput
+		fi
+		check $p
+		((j++))
 	done
 }
 function main() {
